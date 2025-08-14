@@ -25,52 +25,42 @@
           <li><a href="#contacto">Contacto</a></li>
         </ul>
       </nav>
+      <a id="inicio" class="anchor-offset" aria-hidden="true"></a>
     </div>
   </header>
 
-    <!-- IMAGEN GRANDE DE FONDO CON TEXTO ENCIMA -->
-    <section class="hero">
-        <div class="hero-overlay">
-          <div class="hero-text">
-          </div>
+      <!-- IMAGEN GRANDE DE FONDO CON TEXTO ENCIMA -->
+  <section class="hero">
+      <div class="hero-overlay">
+        <div class="hero-text">
+          <!-- Espacio para imagen de fundadores detrás del header -->
         </div>
-      </section>
+      </div>
+    </section>
 
   <!-- RESTO DE SECCIONES -->
 
-  <section id="contacto-rapido">
+  <section id="contacto" class="contacto-rapido">
     <p>Tel: +51 936 901 815 / +51 922 809 922</p>
     <p>Email: <a href="mailto:geosciencessac@gmail.com">geosciencessac@gmail.com</a></p>
     <p>Dirección: Jr. Rosa Crisostomo N° 232 - El Tambo - Huancayo</p>
   </section>
 
-  <!-- ... resto de tus secciones sin cambios ... -->
-
-  <!-- JavaScript para efecto scroll en header -->
-  <script>
-    window.addEventListener("scroll", function () {
-      const header = document.querySelector(".main-header");
-      header.classList.toggle("scrolled", window.scrollY > 50);
-    });
-  </script>
-  
-
-  <section id="contacto-rapido">
-    <p>Tel: +51 936 901 815 / +51 922 809 922</p>
-    <p>Email: <a href="mailto:geosciencessac@gmail.com">geosciencessac@gmail.com</a></p>
-    <p>Dirección: Jr. Rosa Crisostomo N° 232 - El Tambo - Huancayo</p>
-  </section>
 
   <section id="quienes-somos">
     <h2>¿Quiénes somos?</h2>
     <p>Nos dedicamos a la investigación de subsuelos, ensayos de mecánica de suelos, concreto y pavimentos, consultoría y construcción, brindando soluciones de alta calidad al sector público y privado.</p>
   </section>
 
-  <section id="mision-vision">
-    <h2>Misión</h2>
-    <p>Atender las necesidades de nuestros clientes, proporcionando soluciones y servicios bajo los más altos estándares de calidad.</p>
-    <h2>Visión</h2>
-    <p>Ser empresas líderes, competitivas y promotoras del desarrollo nacional.</p>
+  <section id="mision-vision" class="mv-grid">
+    <div class="mv-card">
+      <h3>Misión</h3>
+      <p>Atender las necesidades de nuestros clientes, proporcionando soluciones y servicios bajo los más altos estándares de calidad.</p>
+    </div>
+    <div class="mv-card">
+      <h3>Visión</h3>
+      <p>Ser empresas líderes, competitivas y promotoras del desarrollo nacional.</p>
+    </div>
   </section>
 
   <!-- Servicios -->
@@ -343,12 +333,38 @@
   <a href="https://wa.me/51936901815" class="whatsapp-float" target="_blank" title="Contáctanos por WhatsApp">
     <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp">
   </a>
-  <!-- JavaScript para efecto scroll en header -->
+  <!-- JavaScript para efecto scroll en header + compensación de altura -->
   <script>
-    window.addEventListener("scroll", function () {
-      const header = document.querySelector(".main-header");
-      header.classList.toggle("scrolled", window.scrollY > 50);
-    });
+    (function(){
+      const header = document.querySelector('.main-header');
+      const hero = document.querySelector('.hero');
+      const computeThreshold = () => {
+        const headerH = header?.offsetHeight || 0;
+        const heroH = hero?.offsetHeight || 0;
+        return Math.max(0, heroH - headerH - 10);
+      };
+      let threshold = computeThreshold();
+      const setScrolled = () => header.classList.toggle('scrolled', window.scrollY > threshold);
+      setScrolled();
+      window.addEventListener('scroll', setScrolled, { passive: true });
+      window.addEventListener('resize', () => { threshold = computeThreshold(); setScrolled(); }, { passive: true });
+      // Smooth scroll offset for fixed header
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e){
+          const id = this.getAttribute('href');
+          if (id.length > 1) {
+            const el = document.querySelector(id);
+            if (el) {
+              e.preventDefault();
+              const rect = el.getBoundingClientRect();
+              const offset = (header?.offsetHeight || 0) + 10;
+              const top = window.scrollY + rect.top - offset;
+              window.scrollTo({ top, behavior: 'smooth' });
+            }
+          }
+        });
+      });
+    })();
   </script>
 </body>
 </html>
